@@ -33,5 +33,29 @@ $dad->children[] = $son;
         <pre>
             <?php echo json_encode(JSONReference::encode($dad)); ?>
         </pre>
+        <h1>JavaScript</h1>
+        <pre>
+            dad.firstname = <span id="firstname1"></span>
+            dad.children[0].parent.firstname = <span id="firstname2"></span>
+
+            dad.firstname = 'Not Max';
+
+            dad.firstname = <span id="firstname3"></span>
+            dad.children[0].parent.firstname = <span id="firstname4"></span>
+        </pre>
+        <script src="../JSONReference.js"></script>
+        <script>
+            var data = <?php echo json_encode(JSONReference::encode($dad)); ?>;
+
+            dad = JSONReference.decode(data);
+
+            document.getElementById('firstname1').innerHTML = dad.firstname;
+            document.getElementById('firstname2').innerHTML = dad.children[0].parent.firstname;
+            
+            dad.firstname = 'Not Max';
+            
+            document.getElementById('firstname3').innerHTML = dad.firstname;
+            document.getElementById('firstname4').innerHTML = dad.children[0].parent.firstname;
+        </script>
     </body>
 </html>
