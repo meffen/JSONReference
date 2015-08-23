@@ -64,13 +64,25 @@ class JSONReferenceTest extends PHPUnit_Framework_TestCase {
 
         $this->assertEquals('@', substr($result->root, 0, 1));
         $this->assertEquals('Max', $result->objects->{$result->root}->firstname);
-        
+
         $hash = $result->objects->{$result->root}->children[0];
         $this->assertEquals('Manfred', $result->objects->{$hash}->firstname);
     }
 
-    public function testDecode() {
+    public function testDecodeCircularObjectsFromJson() {
+        $json = '{"root":"@000000005750c50c000000000ea0522a","objects":{"@000000005750c513000000000ea0522a":{"firstname":"Manfred","parent":"@000000005750c50c000000000ea0522a","children":null},"@000000005750c50c000000000ea0522a":{"firstname":"Max","parent":null,"children":["@000000005750c513000000000ea0522a"]}}}';
+
+        $personA = JSONReference::decode(json_decode($json));
+
+        $this->assertEquals('Max', $personA->firstname);
+        $this->assertEquals('Manfred', $personA->children[0]->firstname);
+        $this->assertEquals('Max', $personA->children[0]->parent->firstname);
         
+        $personA->firstname = 'Not Max';
+        
+        $this->assertEquals('Not Max', $personA->firstname);
+        $this->assertEquals('Manfred', $personA->children[0]->firstname);
+        $this->assertEquals('Not Max', $personA->children[0]->parent->firstname);
     }
 
 }
