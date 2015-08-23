@@ -41,7 +41,7 @@ class JSONReference {
             throw new \InvalidArgumentException('Parameter data->objects has items, but is not an instance of stdClass');
         }
 
-        return self::replace_hash_with_objects($data->root, clone $data->objects);
+        return self::replaceHashWithObjectsRecursive($data->root, clone $data->objects);
     }
 
     /**
